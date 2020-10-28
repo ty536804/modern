@@ -39,8 +39,15 @@ func (r *Request) Do() error {
 	return nil
 }
 
-// 发送网络请求
-//func (r *Request) NewRequest(method, Url, userAgent string,handle Handel, body io.Reader) (*Request, error) {
+/****
+ @desc 发送网络请求
+ @Param method 请求方式
+ @Param Url 请求地址
+ @Param userAgent 请求头
+ @Param handle 处理时间的方法
+ @Param body 内容体
+ */
+
 func NewRequest(method, Url, userAgent string,handle Handel, body io.Reader) (*Request, error) {
 	//验证url是否合法
 	_,err := url.Parse(Url)
