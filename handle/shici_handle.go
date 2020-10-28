@@ -9,11 +9,13 @@ import (
 	"strings"
 )
 
-type AuthorHandle struct {
-}
-
 const Base = "https://so.gushiwen.cn"
 
+type AuthorHandle struct {
+
+}
+
+// @Summer 作者列表
 func (a *AuthorHandle) Worker(body io.Reader, url string) {
 	doc, err := goquery.NewDocumentFromReader(body)
 
@@ -22,15 +24,11 @@ func (a *AuthorHandle) Worker(body io.Reader, url string) {
 	}
 
 	doc.Find(".sons").Find(".cont").Find("a").Each(func(i int, s *goquery.Selection) {
-		author := s.Text()
 		link,_ := s.Attr("href")
-		fmt.Printf("author:%s, link:%s \n",author,link)
 
-
-		h := PomeHomeHandle{}
-
+		h := HomePageHandle{}
 		fish := gofish.NewGoFish()
-		request, err := gofish.NewRequest("GET", Base+link, gofish.UserAgent, &h,nil)
+		request, err := gofish.NewRequest("GET",  Base+link, gofish.UserAgent, &h,nil)
 
 		if err != nil {
 			fmt.Println(err)
@@ -42,21 +40,22 @@ func (a *AuthorHandle) Worker(body io.Reader, url string) {
 	})
 }
 
-type PomeHomeHandle struct {
+// @Summer 作者主页
+type HomePageHandle struct {
 
 }
-func (p *PomeHomeHandle) Worker(body io.Reader, url string) {
-	doc, err := goquery.NewDocumentFromReader(body)
+
+func (h *HomePageHandle) Worker(body io.Reader, url string)  {
+	doc,err := goquery.NewDocumentFromReader(body)
 
 	if err != nil {
-		fmt.Errorf("doc err:%s",err)
+		fmt.Errorf("home page doc err:%s", err)
 	}
 
 	doc.Find(".sonspic").Find(".cont").Find("p").Find("a").Each(func(i int, s *goquery.Selection) {
 		link,_ := s.Attr("href")
-		fmt.Printf("作品主页=%s \n",Base+link)
 
-		h := PomeHomeInfoHandle{}
+		h := PoetryList{}
 
 		fish := gofish.NewGoFish()
 		request, err := gofish.NewRequest("GET", Base+link, gofish.UserAgent, &h,nil)
@@ -71,10 +70,12 @@ func (p *PomeHomeHandle) Worker(body io.Reader, url string) {
 	})
 }
 
-type PomeHomeInfoHandle struct {
+// @Summer 诗词列表
+type PoetryList struct {
 
 }
-func (p *PomeHomeInfoHandle) Worker(body io.Reader, url string) {
+
+func (p *PoetryList) Worker(body io.Reader, url string)  {
 	doc, err := goquery.NewDocumentFromReader(body)
 
 	if err != nil {

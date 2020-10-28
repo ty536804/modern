@@ -16,7 +16,11 @@ type Request struct {
 	Client http.Client
 }
 
-func (r *Request) Do() error {
+/****
+@desc 获取内容
+*/
+
+func (r *Request) Do() error  {
 	request, err := http.NewRequest(r.Method, r.Url, r.Body)
 	if err != nil {
 		return  err
@@ -25,7 +29,8 @@ func (r *Request) Do() error {
 	request.Header = *r.Headers
 
 	resp, err := r.Client.Do(request)
-	if err !=nil {
+
+	if err != nil {
 		return  err
 	}
 
@@ -36,26 +41,23 @@ func (r *Request) Do() error {
 	r.Handle.Worker(resp.Body, r.Url)
 	defer resp.Body.Close()
 
-	return nil
+	return  nil
 }
 
 /****
- @desc 发送网络请求
- @Param method 请求方式
- @Param Url 请求地址
- @Param userAgent 请求头
- @Param handle 处理时间的方法
- @Param body 内容体
- */
-
-func NewRequest(method, Url, userAgent string,handle Handel, body io.Reader) (*Request, error) {
-	//验证url是否合法
+@desc 发送网络请求
+@Param method 请求方式
+@Param Url 请求地址
+@Param userAgent 请求头
+@Param handle 处理事件的方法
+@Param body 内容体
+*/
+func NewRequest(method, Url, userAgent string, handle Handel, body io.Reader) (*Request, error) {
 	_,err := url.Parse(Url)
 	if err != nil {
 		return nil,err
 	}
 
-	// 添加头信息
 	hdr := http.Header{}
 	if userAgent != "" {
 		hdr.Add("User-Agent", userAgent)
@@ -73,8 +75,8 @@ func NewRequest(method, Url, userAgent string,handle Handel, body io.Reader) (*R
 		Url:Url,
 		Method:method,
 		Headers:&hdr,
-		Handle:handle,
 		Body:body,
+		Handle:handle,
 		Client:client,
 	},nil
 }

@@ -13,10 +13,11 @@ type GoFish struct {
 	Request *Request
 }
 
+// @Summer 实例化
 func NewGoFish() *GoFish  {
 	return &GoFish{}
 }
 
-func (g *GoFish) Visit() error {
+func (g *GoFish) Visit() error  {
 	return g.Request.Do()
 }
